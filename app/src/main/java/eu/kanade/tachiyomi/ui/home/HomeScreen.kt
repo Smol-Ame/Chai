@@ -208,11 +208,11 @@ object HomeScreen : Screen() {
         alwaysShowLabel: Boolean,
         uiPreferences: UiPreferences,
     ) {
-        val selectedPageLabel by uiPreferences.selectedPageLabel().asState(scope)
+        val scope = rememberCoroutineScope()
+        val selectedPageLabel by uiPreferences.selectedPageLabel.asState(scope)
         /* Chai <-- */
         val tabNavigator = LocalTabNavigator.current
         val navigator = LocalNavigator.currentOrThrow
-        val scope = rememberCoroutineScope()
         val selected = tabNavigator.current::class == tab::class
         NavigationBarItem(
             selected = selected,
@@ -246,11 +246,11 @@ object HomeScreen : Screen() {
         alwaysShowLabel: Boolean,
         uiPreferences: UiPreferences,
         ) {
-        val selectedPageLabel by uiPreferences.selectedPageLabel().asState(scope)
+        val scope = rememberCoroutineScope()
+        val selectedPageLabel by uiPreferences.selectedPageLabel.asState(scope)
         /* Chai <-- */
         val tabNavigator = LocalTabNavigator.current
         val navigator = LocalNavigator.currentOrThrow
-        val scope = rememberCoroutineScope()
         val selected = tabNavigator.current::class == tab::class
         NavigationRailItem(
             selected = selected,
