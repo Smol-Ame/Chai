@@ -6,7 +6,7 @@
     <string name="entry_type_manga">Manga</string>
     <string name="entry_type_manhwa">Manhwa</string>
     <string name="entry_type_manhua">Manhua</string>
-    <string name="entry_type_comic">Karikatür</string>
+    <string name="entry_type_comic">Çizgi Roman</string>
     <string name="pref_category_eh">E-Hentai</string>
     <string name="pref_category_mangadex">MangaDex</string>
     <string name="action_start_reading">Okumaya başla</string>
@@ -298,7 +298,7 @@
     <string name="action_share_second_page">İkinci sayfayı paylaş</string>
     <string name="action_copy_combined_page">Birleştirilmiş sayfayı kopyala</string>
     <string name="center_margin_wide_page">Geniş sayfaya ekle</string>
-    <string name="migration">Taşı</string>
+    <string name="migration">Taşıma</string>
     <string name="favorites_sync_done_errors">Favorilerin eşitlenmesi hatasız olarak tamamlandı</string>
     <string name="save_search_delete">Kaydedilmiş arama sorgusunu sil?</string>
     <string name="no_source_categories">Kaynak kategori mavcut değil</string>
@@ -567,7 +567,7 @@
     <string name="follow_status">Takip etme durumu</string>
     <string name="mal_id">Mal id</string>
     <string name="is_visible">Görülebilir: %1$s</string>
-    <string name="language_translated">%1$s ÇVR</string>
+    <string name="language_translated">%1$s Çeviri</string>
     <string name="delete_merged_entry">Emin misiniz?</string>
     <string name="delete_merged_entry_desc">Girdi birleştirmeden kaldırılacaktır, ayrıca birleştirilmiş girdiye uygulanmış kaydedilmeyen değişiklikler kaybolacaktır</string>
     <string name="chapter_updates_merged_entry">Bölüm güncellemelerini ayarla</string>
@@ -582,7 +582,7 @@
     <string name="random">Rastgele</string>
     <string name="mangadex_push_favorites_to_mangadex">Kitaplık girdilerini MangaDex\'e eşitle</string>
     <string name="mangadex_push_favorites_to_mangadex_summary">MD listelerinde olmayan girdileri okunuyor olarak MangaDex\'e eşitler.</string>
-    <string name="alt_titles">Alternatif Başlıklar</string>
+    <string name="alt_titles">Alternatif başlıklar</string>
     <string name="select_scanlators">Gösterilecek çeviri grupları</string>
     <string name="similar">%1$s benzeri</string>
     <string name="relation_similar">Benzer</string>
@@ -620,4 +620,10 @@
     <string name="rec_collecting">Öneriler toplanıyor</string>
     <string name="rec_initializing">Başlatılıyor</string>
     <string name="scan_qr_code">QR kod tarayın</string>
+    <string name="filename">Dosya adı</string>
+    <string name="file_extension">Dosya uzantısı</string>
+    <string name="base_url">Ana url</string>
+    <string name="final_chapter">Son bölüm</string>
+    <string name="pref_include_chapter_url_hash">Bölüm URL hash\'ini ekle</string>
+    <string name="pref_include_chapter_url_hash_desc">Bölüm URL\'sinin MD5 hash değerinin ilk altı karakterini bölüm dosyasının veya klasörünün adına ekleyin.</string>
 </resources>

@@ -64,7 +64,7 @@ class ChapterLoader(
                 // otherwise use the requested page.
                 if (!chapter.chapter.read /* --> EH */ ||
                     readerPrefs
-                        .preserveReadingPosition()
+                        .preserveReadingPosition
                         .get() ||
                     page != null // <-- EH
                 ) {
@@ -92,10 +92,11 @@ class ChapterLoader(
     private fun getPageLoader(chapter: ReaderChapter): PageLoader {
         val dbChapter = chapter.chapter
         val isDownloaded = downloadManager.isChapterDownloaded(
-            chapterName = dbChapter.name,
-            chapterScanlator = dbChapter.scanlator, /* SY --> */
-            mangaTitle = manga.ogTitle /* SY <-- */,
-            sourceId = manga.source,
+            dbChapter.name,
+            dbChapter.scanlator,
+            dbChapter.url,
+            /* SY --> */ manga.ogTitle, /* SY <-- */
+            manga.source,
             skipCache = true,
         )
         return when {
@@ -110,6 +111,7 @@ class ChapterLoader(
                 val isMergedMangaDownloaded = downloadManager.isChapterDownloaded(
                     chapterName = chapter.chapter.name,
                     chapterScanlator = chapter.chapter.scanlator,
+                    chapterUrl = chapter.chapter.url,
                     mangaTitle = manga.ogTitle,
                     sourceId = manga.source,
                     skipCache = true,

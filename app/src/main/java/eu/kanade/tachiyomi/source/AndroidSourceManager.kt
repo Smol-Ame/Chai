@@ -6,6 +6,7 @@ import eu.kanade.tachiyomi.data.download.DownloadManager
 import eu.kanade.tachiyomi.extension.ExtensionManager
 import eu.kanade.tachiyomi.source.online.HttpSource
 import eu.kanade.tachiyomi.source.online.all.EHentai
+import eu.kanade.tachiyomi.source.online.all.Lanraragi
 import eu.kanade.tachiyomi.source.online.all.MangaDex
 import eu.kanade.tachiyomi.source.online.all.MergedSource
 import eu.kanade.tachiyomi.source.online.all.NHentai
@@ -78,23 +79,25 @@ class AndroidSourceManager(
         scope.launch {
             extensionManager.installedExtensionsFlow
                 // SY -->
-                .combine(exhPreferences.enableExhentai().changes()) { extensions, enableExhentai ->
+                .combine(exhPreferences.enableExhentai.changes()) { extensions, enableExhentai ->
                     extensions to enableExhentai
                 }
                 // SY <--
                 .collectLatest { (extensions, enableExhentai) ->
-                    val mutableMap = ConcurrentHashMap<Long, Source>(
+                    val mutableMap: ConcurrentHashMap<Long, Source> = ConcurrentHashMap<Long, Source>(
                         mapOf(
                             LocalSource.ID to LocalSource(
                                 context,
                                 Injekt.get(),
                                 Injekt.get(),
                                 // SY -->
-                                sourcePreferences.allowLocalSourceHiddenFolders()::get,
+                                sourcePreferences.allowLocalSourceHiddenFolders::get,
                                 // SY <--
                             ),
                         ),
-                    ).apply {
+                    )
+
+                    mutableMap.apply {
                         // SY -->
                         put(EH_SOURCE_ID, EHentai(EH_SOURCE_ID, false, context))
                         if (enableExhentai) {
@@ -103,6 +106,7 @@ class AndroidSourceManager(
                         put(MERGED_SOURCE_ID, MergedSource())
                         // SY <--
                     }
+
                     extensions.forEach { extension ->
                         extension.sources.mapNotNull { it.toInternalSource() }.forEach {
                             mutableMap[it.id] = it
@@ -275,6 +279,13 @@ class AndroidSourceManager(
                 fillInSourceId,
                 "eu.kanade.tachiyomi.extension.all.nhentai.NHentai",
                 NHentai::class,
+                true,
+            ),
+            DelegatedSource(
+                "LANraragi",
+                fillInSourceId,
+                "eu.kanade.tachiyomi.extension.all.lanraragi.LANraragi",
+                Lanraragi::class,
                 true,
             ),
         ).associateBy { it.originalSourceQualifiedClassName }

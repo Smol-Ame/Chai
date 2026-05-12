@@ -41,7 +41,7 @@ private val mapper = { cursor: SqlCursor ->
         chapterFetchedAt = cursor.getLong(29)!!,
         lastRead = cursor.getLong(30)!!,
         bookmarkCount = cursor.getDouble(31)!!,
-        category = cursor.getLong(32)!!,
+        categories = cursor.getString(32)!!,
     )
 }
 
@@ -62,9 +62,9 @@ class LibraryQuery(
                 coalesce(C.fetchedAt, 0) AS chapterFetchedAt,
                 coalesce(C.lastRead, 0) AS lastRead,
                 coalesce(C.bookmarkCount, 0) AS bookmarkCount,
-                coalesce(MC.category_id, 0) AS category
+                coalesce(MC.categories, '0') AS categories
             FROM mangas M
-            LEFT JOIN(
+            LEFT JOIN (
                 SELECT
                     chapters.manga_id,
                     count(*) AS total,
@@ -83,7 +83,11 @@ class LibraryQuery(
                 GROUP BY chapters.manga_id
             ) AS C
             ON M._id = C.manga_id
-            LEFT JOIN mangas_categories AS MC
+            LEFT JOIN (
+                SELECT manga_id, group_concat(category_id) AS categories
+                FROM mangas_categories
+                GROUP BY manga_id
+            ) AS MC
             ON MC.manga_id = M._id
             WHERE $condition AND M.source <> $MERGED_SOURCE_ID
             UNION
@@ -95,7 +99,7 @@ class LibraryQuery(
                 coalesce(C.fetchedAt, 0) AS chapterFetchedAt,
                 coalesce(C.lastRead, 0) AS lastRead,
                 coalesce(C.bookmarkCount, 0) AS bookmarkCount,
-                coalesce(MC.category_id, 0) AS category
+                coalesce(MC.categories, '0') AS categories
             FROM mangas M
             LEFT JOIN (
                 SELECT merged.manga_id,merged.merge_id
@@ -103,7 +107,7 @@ class LibraryQuery(
                 GROUP BY merged.merge_id
             ) as ME
             ON ME.merge_id = M._id
-            LEFT JOIN(
+            LEFT JOIN (
                 SELECT
                     ME.merge_id,
                     count(*) AS total,
@@ -124,7 +128,11 @@ class LibraryQuery(
                 GROUP BY ME.merge_id
             ) AS C
             ON ME.merge_id = C.merge_id
-            LEFT JOIN mangas_categories AS MC
+            LEFT JOIN (
+                SELECT manga_id, group_concat(category_id) AS categories
+                FROM mangas_categories
+                GROUP BY manga_id
+            ) AS MC
             ON MC.manga_id = M._id
             WHERE $condition AND M.source = $MERGED_SOURCE_ID;
             """.trimIndent(),

@@ -2,86 +2,94 @@ package eu.kanade.domain.source.service
 
 import eu.kanade.domain.source.interactor.SetMigrateSorting
 import eu.kanade.tachiyomi.util.system.LocaleHelper
+import mihon.domain.migration.models.MigrationFlag
 import tachiyomi.core.common.preference.Preference
 import tachiyomi.core.common.preference.PreferenceStore
 import tachiyomi.core.common.preference.getEnum
+import tachiyomi.core.common.preference.getLongArray
 import tachiyomi.domain.library.model.LibraryDisplayMode
 
 class SourcePreferences(
-    private val preferenceStore: PreferenceStore,
+    preferenceStore: PreferenceStore,
 ) {
 
-    fun sourceDisplayMode() = preferenceStore.getObject(
+    val sourceDisplayMode: Preference<LibraryDisplayMode> = preferenceStore.getObjectFromString(
         "pref_display_mode_catalogue",
         LibraryDisplayMode.default,
         LibraryDisplayMode.Serializer::serialize,
         LibraryDisplayMode.Serializer::deserialize,
     )
 
-    fun enabledLanguages() = preferenceStore.getStringSet("source_languages", LocaleHelper.getDefaultEnabledLanguages())
+    val enabledLanguages: Preference<Set<String>> = preferenceStore.getStringSet(
+        "source_languages",
+        LocaleHelper.getDefaultEnabledLanguages(),
+    )
 
-    fun disabledSources() = preferenceStore.getStringSet("hidden_catalogues", emptySet())
+    val disabledSources: Preference<Set<String>> = preferenceStore.getStringSet("hidden_catalogues", emptySet())
 
-    fun incognitoExtensions() = preferenceStore.getStringSet("incognito_extensions", emptySet())
+    val incognitoExtensions: Preference<Set<String>> = preferenceStore.getStringSet("incognito_extensions", emptySet())
 
-    fun pinnedSources() = preferenceStore.getStringSet("pinned_catalogues", emptySet())
+    val pinnedSources: Preference<Set<String>> = preferenceStore.getStringSet("pinned_catalogues", emptySet())
 
-    fun lastUsedSource() = preferenceStore.getLong(
+    val lastUsedSource: Preference<Long> = preferenceStore.getLong(
         Preference.appStateKey("last_catalogue_source"),
         -1,
     )
 
-    fun showNsfwSource() = preferenceStore.getBoolean("show_nsfw_source", true)
+    val showNsfwSource: Preference<Boolean> = preferenceStore.getBoolean("show_nsfw_source", true)
 
-    fun migrationSortingMode() = preferenceStore.getEnum("pref_migration_sorting", SetMigrateSorting.Mode.ALPHABETICAL)
+    val migrationSortingMode: Preference<SetMigrateSorting.Mode> = preferenceStore.getEnum(
+        "pref_migration_sorting",
+        SetMigrateSorting.Mode.ALPHABETICAL,
+    )
 
-    fun migrationSortingDirection() = preferenceStore.getEnum(
+    val migrationSortingDirection: Preference<SetMigrateSorting.Direction> = preferenceStore.getEnum(
         "pref_migration_direction",
         SetMigrateSorting.Direction.ASCENDING,
     )
 
-    fun hideInLibraryItems() = preferenceStore.getBoolean("browse_hide_in_library_items", false)
+    val hideInLibraryItems: Preference<Boolean> = preferenceStore.getBoolean("browse_hide_in_library_items", false)
 
-    fun extensionRepos() = preferenceStore.getStringSet("extension_repos", emptySet())
+    val extensionRepos: Preference<Set<String>> = preferenceStore.getStringSet("extension_repos", emptySet())
 
-    fun extensionUpdatesCount() = preferenceStore.getInt("ext_updates_count", 0)
+    val extensionUpdatesCount: Preference<Int> = preferenceStore.getInt("ext_updates_count", 0)
 
-    fun trustedExtensions() = preferenceStore.getStringSet(
+    val trustedExtensions: Preference<Set<String>> = preferenceStore.getStringSet(
         Preference.appStateKey("trusted_extensions"),
         emptySet(),
     )
 
-    fun globalSearchFilterState() = preferenceStore.getBoolean(
+    val globalSearchFilterState: Preference<Boolean> = preferenceStore.getBoolean(
         Preference.appStateKey("has_filters_toggle_state"),
         false,
     )
 
     // SY -->
-    fun enableSourceBlacklist() = preferenceStore.getBoolean("eh_enable_source_blacklist", true)
+    val enableSourceBlacklist: Preference<Boolean> = preferenceStore.getBoolean("eh_enable_source_blacklist", true)
 
-    fun sourcesTabCategories() = preferenceStore.getStringSet("sources_tab_categories", mutableSetOf())
+    val sourcesTabCategories: Preference<Set<String>> = preferenceStore.getStringSet("sources_tab_categories", mutableSetOf())
 
-    fun sourcesTabCategoriesFilter() = preferenceStore.getBoolean("sources_tab_categories_filter", false)
+    val sourcesTabCategoriesFilter: Preference<Boolean> = preferenceStore.getBoolean("sources_tab_categories_filter", false)
 
-    fun sourcesTabSourcesInCategories() = preferenceStore.getStringSet("sources_tab_source_categories", mutableSetOf())
+    val sourcesTabSourcesInCategories: Preference<Set<String>> = preferenceStore.getStringSet("sources_tab_source_categories", mutableSetOf())
 
-    fun dataSaver() = preferenceStore.getEnum("data_saver", DataSaver.NONE)
+    val dataSaver: Preference<DataSaver> = preferenceStore.getEnum("data_saver", DataSaver.NONE)
 
-    fun dataSaverIgnoreJpeg() = preferenceStore.getBoolean("ignore_jpeg", false)
+    val dataSaverIgnoreJpeg: Preference<Boolean> = preferenceStore.getBoolean("ignore_jpeg", false)
 
-    fun dataSaverIgnoreGif() = preferenceStore.getBoolean("ignore_gif", true)
+    val dataSaverIgnoreGif: Preference<Boolean> = preferenceStore.getBoolean("ignore_gif", true)
 
-    fun dataSaverImageQuality() = preferenceStore.getInt("data_saver_image_quality", 80)
+    val dataSaverImageQuality: Preference<Int> = preferenceStore.getInt("data_saver_image_quality", 80)
 
-    fun dataSaverImageFormatJpeg() = preferenceStore.getBoolean("data_saver_image_format_jpeg", false)
+    val dataSaverImageFormatJpeg: Preference<Boolean> = preferenceStore.getBoolean("data_saver_image_format_jpeg", false)
 
-    fun dataSaverServer() = preferenceStore.getString("data_saver_server", "")
+    val dataSaverServer: Preference<String> = preferenceStore.getString("data_saver_server", "")
 
-    fun dataSaverColorBW() = preferenceStore.getBoolean("data_saver_color_bw", false)
+    val dataSaverColorBW: Preference<Boolean> = preferenceStore.getBoolean("data_saver_color_bw", false)
 
-    fun dataSaverExcludedSources() = preferenceStore.getStringSet("data_saver_excluded", emptySet())
+    val dataSaverExcludedSources: Preference<Set<String>> = preferenceStore.getStringSet("data_saver_excluded", emptySet())
 
-    fun dataSaverDownloader() = preferenceStore.getBoolean("data_saver_downloader", true)
+    val dataSaverDownloader: Preference<Boolean> = preferenceStore.getBoolean("data_saver_downloader", true)
 
     enum class DataSaver {
         NONE,
@@ -89,31 +97,38 @@ class SourcePreferences(
         WSRV_NL,
     }
 
-    fun migrateFlags() = preferenceStore.getInt("migrate_flags", Int.MAX_VALUE)
+    val allowLocalSourceHiddenFolders: Preference<Boolean> = preferenceStore.getBoolean("allow_local_source_hidden_folders", false)
 
-    fun defaultMangaOrder() = preferenceStore.getString("default_manga_order", "")
+    val preferredMangaDexId: Preference<String> = preferenceStore.getString("preferred_mangaDex_id", "0")
 
-    fun migrationSources() = preferenceStore.getString("migrate_sources", "")
-
-    fun smartMigration() = preferenceStore.getBoolean("smart_migrate", false)
-
-    fun useSourceWithMost() = preferenceStore.getBoolean("use_source_with_most", false)
-
-    fun skipPreMigration() = preferenceStore.getBoolean(Preference.appStateKey("skip_pre_migration"), false)
-
-    fun hideNotFoundMigration() = preferenceStore.getBoolean("hide_not_found_migration", false)
-
-    fun showOnlyUpdatesMigration() = preferenceStore.getBoolean("show_only_updates_migration", false)
-
-    fun allowLocalSourceHiddenFolders() = preferenceStore.getBoolean("allow_local_source_hidden_folders", false)
-
-    fun preferredMangaDexId() = preferenceStore.getString("preferred_mangaDex_id", "0")
-
-    fun mangadexSyncToLibraryIndexes() = preferenceStore.getStringSet(
+    val mangadexSyncToLibraryIndexes: Preference<Set<String>> = preferenceStore.getStringSet(
         "pref_mangadex_sync_to_library_indexes",
         emptySet(),
     )
 
-    fun recommendationSearchFlags() = preferenceStore.getInt("rec_search_flags", Int.MAX_VALUE)
+    val recommendationSearchFlags: Preference<Int> = preferenceStore.getInt("rec_search_flags", Int.MAX_VALUE)
     // SY <--
+
+    val migrationSources: Preference<List<Long>> = preferenceStore.getLongArray("migration_sources", emptyList())
+
+    val migrationFlags: Preference<Set<MigrationFlag>> = preferenceStore.getObjectFromInt(
+        key = "migration_flags",
+        defaultValue = MigrationFlag.entries.toSet(),
+        serializer = { MigrationFlag.toBit(it) },
+        deserializer = { value: Int -> MigrationFlag.fromBit(value) },
+    )
+
+    val migrationDeepSearchMode: Preference<Boolean> = preferenceStore.getBoolean("migration_deep_search", false)
+
+    val migrationPrioritizeByChapters: Preference<Boolean> = preferenceStore.getBoolean(
+        "migration_prioritize_by_chapters",
+        false,
+    )
+
+    val migrationHideUnmatched: Preference<Boolean> = preferenceStore.getBoolean("migration_hide_unmatched", false)
+
+    val migrationHideWithoutUpdates: Preference<Boolean> = preferenceStore.getBoolean(
+        "migration_hide_without_updates",
+        false,
+    )
 }

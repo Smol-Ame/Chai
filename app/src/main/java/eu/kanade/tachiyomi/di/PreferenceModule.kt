@@ -18,6 +18,7 @@ import tachiyomi.domain.backup.service.BackupPreferences
 import tachiyomi.domain.download.service.DownloadPreferences
 import tachiyomi.domain.library.service.LibraryPreferences
 import tachiyomi.domain.storage.service.StoragePreferences
+import tachiyomi.domain.updates.service.UpdatesPreferences
 import uy.kohesive.injekt.api.InjektRegistrar
 
 class PreferenceModule(val app: Application) : InjektModule {
@@ -29,7 +30,7 @@ class PreferenceModule(val app: Application) : InjektModule {
         addSingletonFactory {
             NetworkPreferences(
                 preferenceStore = get(),
-                verboseLogging = isDevFlavor,
+                verboseLoggingDefault = isDevFlavor,
             )
         }
         addSingletonFactory {
@@ -43,6 +44,9 @@ class PreferenceModule(val app: Application) : InjektModule {
         }
         addSingletonFactory {
             LibraryPreferences(get())
+        }
+        addSingletonFactory {
+            UpdatesPreferences(get())
         }
         addSingletonFactory {
             ReaderPreferences(get())
