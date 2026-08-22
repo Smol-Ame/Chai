@@ -19,3 +19,4 @@ local.properties
 google-services.json
 /app/src/main/assets/client_secrets.json
 *.apk
+app/.idea/workspace.xml
