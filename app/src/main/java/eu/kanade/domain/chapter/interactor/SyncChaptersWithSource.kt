@@ -90,6 +90,7 @@ class SyncChaptersWithSource(
             // Update metadata from source if necessary.
             if (source is HttpSource) {
                 val sChapter = chapter.toSChapter()
+                @Suppress("DEPRECATION")
                 source.prepareNewChapter(sChapter, manga.toSManga())
                 chapter = chapter.copyFromSChapter(sChapter)
             }
@@ -133,6 +134,7 @@ class SyncChaptersWithSource(
                         chapterNumber = chapter.chapterNumber,
                         scanlator = chapter.scanlator,
                         sourceOrder = chapter.sourceOrder,
+                        memo = chapter.memo,
                     )
 
                     if (chapter.dateUpload != 0L) {

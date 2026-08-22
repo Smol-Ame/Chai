@@ -14,11 +14,10 @@ import eu.kanade.core.preference.asState
 import eu.kanade.domain.source.service.SourcePreferences
 import eu.kanade.domain.ui.UiPreferences
 import eu.kanade.presentation.more.settings.Preference
-import eu.kanade.presentation.more.settings.screen.browse.ExtensionReposScreen
+import eu.kanade.presentation.more.settings.screen.browse.ExtensionStoresScreen
 import eu.kanade.tachiyomi.ui.category.sources.SourceCategoryScreen
 import eu.kanade.tachiyomi.util.system.AuthenticatorUtil.authenticate
-import kotlinx.collections.immutable.persistentListOf
-import mihon.domain.extensionrepo.interactor.GetExtensionRepoCount
+import mihon.domain.extension.interactor.GetExtensionStoreCountAsFlow
 import tachiyomi.core.common.i18n.stringResource
 import tachiyomi.i18n.MR
 import tachiyomi.i18n.sy.SYMR
@@ -40,9 +39,9 @@ object SettingsBrowseScreen : SearchableSettings {
         val navigator = LocalNavigator.currentOrThrow
 
         val sourcePreferences = remember { Injekt.get<SourcePreferences>() }
-        val getExtensionRepoCount = remember { Injekt.get<GetExtensionRepoCount>() }
+        val getExtensionStoreCountAsFlow = remember { Injekt.get<GetExtensionStoreCountAsFlow>() }
 
-        val reposCount by getExtensionRepoCount.subscribe().collectAsState(0)
+        val reposCount by getExtensionStoreCountAsFlow().collectAsState(0)
 
         // SY -->
         val scope = rememberCoroutineScope()
@@ -53,7 +52,7 @@ object SettingsBrowseScreen : SearchableSettings {
             // SY -->
             Preference.PreferenceGroup(
                 title = stringResource(MR.strings.label_sources),
-                preferenceItems = persistentListOf(
+                preferenceItems = listOf(
                     kotlin.run {
                         val count by sourcePreferences.sourcesTabCategories.collectAsState()
                         Preference.PreferenceItem.TextPreference(
@@ -83,7 +82,7 @@ object SettingsBrowseScreen : SearchableSettings {
             ),
             Preference.PreferenceGroup(
                 title = stringResource(SYMR.strings.feed),
-                preferenceItems = persistentListOf(
+                preferenceItems = listOf(
                     Preference.PreferenceItem.SwitchPreference(
                         preference = uiPreferences.hideFeedTab,
                         title = stringResource(SYMR.strings.pref_hide_feed),
@@ -99,23 +98,23 @@ object SettingsBrowseScreen : SearchableSettings {
             // SY <--
             Preference.PreferenceGroup(
                 title = stringResource(MR.strings.label_sources),
-                preferenceItems = persistentListOf(
+                preferenceItems = listOf(
                     Preference.PreferenceItem.SwitchPreference(
                         preference = sourcePreferences.hideInLibraryItems,
                         title = stringResource(MR.strings.pref_hide_in_library_items),
                     ),
                     Preference.PreferenceItem.TextPreference(
-                        title = stringResource(MR.strings.label_extension_repos),
-                        subtitle = pluralStringResource(MR.plurals.num_repos, reposCount, reposCount),
+                        title = stringResource(MR.strings.extensionStores),
+                        subtitle = pluralStringResource(MR.plurals.num_repos, reposCount.toInt(), reposCount),
                         onClick = {
-                            navigator.push(ExtensionReposScreen())
+                            navigator.push(ExtensionStoresScreen())
                         },
                     ),
                 ),
             ),
             Preference.PreferenceGroup(
                 title = stringResource(MR.strings.pref_category_nsfw_content),
-                preferenceItems = persistentListOf(
+                preferenceItems = listOf(
                     Preference.PreferenceItem.SwitchPreference(
                         preference = sourcePreferences.showNsfwSource,
                         title = stringResource(MR.strings.pref_show_nsfw_source),

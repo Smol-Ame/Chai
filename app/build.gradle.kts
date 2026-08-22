@@ -12,12 +12,13 @@ plugins {
     kotlin("plugin.parcelize")
 
     alias(libs.plugins.aboutLibraries)
+    alias(libs.plugins.androidx.baselineProfile)
     alias(libs.plugins.kotlin.serialization)
 
     id("com.github.ben-manes.versions")
 }
 
-if (gradle.startParameter.taskRequests.toString().contains("Standard")) {
+if (gradle.startParameter.taskRequests.toString().contains("Release")) {
     pluginManager.apply {
         apply(libs.plugins.google.services.get().pluginId)
         apply(libs.plugins.firebase.crashlytics.get().pluginId)
@@ -30,8 +31,10 @@ android {
     defaultConfig {
         applicationId = "eu.kanade.mihon.chai"
 
-        versionCode = 77
-        versionName = "526-1 (r593)"
+        versionCode = 81
+        versionName = "826-1 (r606)"
+
+        buildConfigField("String", "UPSTREAM_VERSION", """"0.20.1"""")
 
         buildConfigField("String", "COMMIT_COUNT", "\"${getLatestCommitCount()}\"")
         buildConfigField("String", "COMMIT_SHA", "\"${getLatestCommitSha()}\"")
@@ -47,34 +50,42 @@ android {
             applicationIdSuffix = ".debug"
             isPseudoLocalesEnabled = true
         }
-        create("releaseTest") {
-            applicationIdSuffix = ".rt"
-            // isMinifyEnabled = true
-            // isShrinkResources = true
-            setProguardFiles(listOf(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"))
-            matchingFallbacks.add("release")
-        }
         named("release") {
             isMinifyEnabled = true
             isShrinkResources = true
+            isProfileable = true
             setProguardFiles(listOf(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"))
 
             buildConfigField("String", "BUILD_TIME", "\"${getBuildTime(useLatestCommitTime = true)}\"")
+            buildConfigField("boolean", "INCLUDE_UPDATER", "true")
+        }
+        create("foss") {
+            initWith(getByName("release"))
+
+            applicationIdSuffix = ".foss"
+
+            matchingFallbacks.add("release")
+
+            buildConfigField("boolean", "INCLUDE_UPDATER", "false")
         }
         create("benchmark") {
             initWith(getByName("release"))
 
             signingConfig = signingConfigs.getByName("debug")
             matchingFallbacks.add("release")
-            isDebuggable = false
-            isProfileable = true
             versionNameSuffix = "-benchmark"
             applicationIdSuffix = ".benchmark"
+
+            buildConfigField("boolean", "INCLUDE_UPDATER", "false")
         }
     }
 
     sourceSets {
-        getByName("benchmark").res.srcDirs("src/debug/res")
+        getByName("release").java.directories.add("src/release/java")
+        getByName("foss").java.directories.add("src/foss/java")
+        getByName("debug").java.directories.add("src/debug/java")
+        getByName("benchmark").java.directories.add("src/debug/java")
+        getByName("benchmark").res.directories.add("src/debug/res")
     }
 
     splits {
@@ -83,21 +94,6 @@ android {
             isUniversalApk = true
             reset()
             include("armeabi-v7a", "arm64-v8a", "x86", "x86_64")
-        }
-    }
-
-    flavorDimensions.add("default")
-
-    productFlavors {
-        create("standard") {
-            buildConfigField("boolean", "INCLUDE_UPDATER", "true")
-            dimension = "default"
-        }
-        create("fdroid") {
-            dimension = "default"
-        }
-        create("dev") {
-            dimension = "default"
         }
     }
 
@@ -137,10 +133,6 @@ android {
         viewBinding = true
         buildConfig = true
         aidl = true
-
-        // Disable some unused things
-        renderScript = false
-        shaders = false
     }
 
     lint {
@@ -164,12 +156,18 @@ kotlin {
             "-opt-in=kotlinx.coroutines.FlowPreview",
             "-opt-in=kotlinx.coroutines.InternalCoroutinesApi",
             "-opt-in=kotlinx.serialization.ExperimentalSerializationApi",
-            "-Xannotation-default-target=param-property",
         )
     }
 }
 
+baselineProfile {
+    baselineProfileOutputDir = "baselineProfiles"
+    mergeIntoMain = true
+}
+
 dependencies {
+    baselineProfile(projects.baselineProfile)
+
     implementation(projects.i18n)
     // SY -->
     implementation(projects.i18nSy)
@@ -205,9 +203,10 @@ dependencies {
     // SY <--
 
     implementation(libs.kotlin.reflect)
-    implementation(libs.kotlinx.collections.immutable)
 
     implementation(libs.bundles.kotlinx.coroutines)
+
+    implementation(libs.sqldelight.async)
 
     // AndroidX libraries
     implementation(libs.androidx.annotation)
@@ -341,11 +340,5 @@ androidComponents {
         // Only excluding in standard flavor because this breaks
         // Layout Inspector's Compose tree
         it.packaging.resources.excludes.add("META-INF/*.version")
-    }
-}
-
-buildscript {
-    dependencies {
-        classpath(libs.kotlin.gradle)
     }
 }

@@ -17,7 +17,11 @@ dependencyResolutionManagement {
             from(files("gradle/sy.versions.toml"))
         }
     }
+
+    @Suppress("UnstableApiUsage")
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+
+    @Suppress("UnstableApiUsage")
     repositories {
         google()
         mavenCentral()
@@ -29,6 +33,7 @@ enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
 rootProject.name = "Chai"
 include(":app")
+include(":baseline-profile")
 include(":core-metadata")
 include(":core:common")
 include(":data")
@@ -37,7 +42,6 @@ include(":i18n")
 // SY -->
 include(":i18n-sy")
 // SY <--
-include(":macrobenchmark")
 include(":presentation-core")
 include(":presentation-widget")
 include(":source-api")

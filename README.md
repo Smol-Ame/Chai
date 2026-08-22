@@ -4,7 +4,7 @@
 
 
 # ![app icon](./.github/readme-images/app-icon.png) Chai, a TachiyomiSY fork
-Mihon is a free and open source manga reader for Android 6.0 and above. This version of Mihon, Chai, was based off TachiyomiSY. This version is meant to integrate changes & features faster, but currently keeping in line with SY. TachiyomiSY tries to push forward where it can, but staying in a place where it can easily grab updates and features from the main app, it tries to make new features, or take features from other forks like J2K and Neko.
+Mihon is a free and open source manga reader for Android 8.0 and above. This version of Mihon, Chai, was based off TachiyomiSY. This version is meant to integrate changes & features faster, but currently keeping in line with SY. TachiyomiSY tries to push forward where it can, but staying in a place where it can easily grab updates and features from the main app, it tries to make new features, or take features from other forks like J2K and Neko.
 
 ## Features
 
@@ -14,7 +14,7 @@ Mihon is a free and open source manga reader for Android 6.0 and above. This ver
 * Online reading from a variety of sources
 * Local reading of downloaded content
 * A configurable reader with multiple viewers, reading directions and other settings.
-* Tracker support: [MyAnimeList](https://myanimelist.net/), [AniList](https://anilist.co/), [Kitsu](https://kitsu.app/), [MangaUpdates](https://mangaupdates.com), [Shikimori](https://shikimori.one), and [Bangumi](https://bgm.tv/) support
+* Tracker support: [MyAnimeList](https://myanimelist.net/), [AniList](https://anilist.co/), [Kitsu](https://kitsu.app/), [MangaUpdates](https://mangaupdates.com), [Shikimori](https://shikimori.one), [Bangumi](https://bgm.tv/) and [Hikka](https://hikka.io/) support.
 * Categories to organize your library
 * Light and dark themes
 * Schedule updating your library for new chapters

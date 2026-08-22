@@ -1,5 +1,6 @@
 buildscript {
     dependencies {
+        classpath(libs.kotlin.gradle)
         classpath(sylibs.versionsx)
     }
 }
@@ -7,8 +8,10 @@ buildscript {
 plugins {
     alias(libs.plugins.aboutLibraries) apply false
     alias(libs.plugins.android.application) apply false
+    alias(libs.plugins.android.kmp.library) apply false
     alias(libs.plugins.android.library) apply false
     alias(libs.plugins.android.test) apply false
+    alias(libs.plugins.androidx.baselineProfile) apply false
     alias(libs.plugins.firebase.crashlytics) apply false
     alias(libs.plugins.google.services) apply false
     alias(libs.plugins.kotlin.compose.compiler) apply false

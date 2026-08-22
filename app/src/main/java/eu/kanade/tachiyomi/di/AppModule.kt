@@ -4,6 +4,7 @@ import android.app.Application
 import androidx.core.content.ContextCompat
 import androidx.sqlite.db.SupportSQLiteDatabase
 import androidx.sqlite.driver.bundled.BundledSQLiteDriver
+import app.cash.sqldelight.async.coroutines.synchronous
 import app.cash.sqldelight.db.SqlDriver
 import app.cash.sqldelight.driver.android.AndroidSqliteDriver
 import com.eygraber.sqldelight.androidx.driver.AndroidxSqliteConfiguration
@@ -33,15 +34,17 @@ import kotlinx.serialization.protobuf.ProtoBuf
 import net.zetetic.database.sqlcipher.SupportOpenHelperFactory
 import nl.adaptivity.xmlutil.XmlDeclMode
 import nl.adaptivity.xmlutil.core.XmlVersion
+import nl.adaptivity.xmlutil.serialization.DefaultXmlSerializationPolicy
 import nl.adaptivity.xmlutil.serialization.XML
+import nl.adaptivity.xmlutil.serialization.XmlConfig
 import tachiyomi.core.common.storage.AndroidStorageFolderProvider
 import tachiyomi.core.common.storage.UniFileTempFileManager
-import tachiyomi.data.AndroidDatabaseHandler
+import tachiyomi.data.Chapters
 import tachiyomi.data.Database
-import tachiyomi.data.DatabaseHandler
 import tachiyomi.data.DateColumnAdapter
 import tachiyomi.data.History
 import tachiyomi.data.Mangas
+import tachiyomi.data.MemoColumnAdapter
 import tachiyomi.data.StringListColumnAdapter
 import tachiyomi.data.UpdateStrategyColumnAdapter
 import tachiyomi.domain.manga.interactor.GetCustomMangaInfo
@@ -76,11 +79,11 @@ class AppModule(val app: Application) : InjektModule {
                     System.loadLibrary("sqlcipher")
 
                     return@synchronized AndroidSqliteDriver(
-                        schema = Database.Schema,
+                        schema = Database.Schema.synchronous(),
                         context = app,
                         name = CbzCrypto.DATABASE_NAME,
                         factory = SupportOpenHelperFactory(CbzCrypto.getDecryptedPasswordSql(), null, false, 25),
-                        callback = object : AndroidSqliteDriver.Callback(Database.Schema) {
+                        callback = object : AndroidSqliteDriver.Callback(Database.Schema.synchronous()) {
                             override fun onOpen(db: SupportSQLiteDatabase) {
                                 super.onOpen(db)
                                 setPragma(db, "foreign_keys = ON")
@@ -117,10 +120,13 @@ class AppModule(val app: Application) : InjektModule {
                 mangasAdapter = Mangas.Adapter(
                     genreAdapter = StringListColumnAdapter,
                     update_strategyAdapter = UpdateStrategyColumnAdapter,
+                    memoAdapter = MemoColumnAdapter,
+                ),
+                chaptersAdapter = Chapters.Adapter(
+                    memoAdapter = MemoColumnAdapter,
                 ),
             )
         }
-        addSingletonFactory<DatabaseHandler> { AndroidDatabaseHandler(get(), get()) }
 
         addSingletonFactory {
             Json {
@@ -128,15 +134,15 @@ class AppModule(val app: Application) : InjektModule {
                 explicitNulls = false
             }
         }
-        addSingletonFactory {
-            XML {
-                defaultPolicy {
+        addSingletonFactory<XML> {
+            XML.v1 {
+                policy {
                     ignoreUnknownChildren()
+                    autoPolymorphic = true
                 }
-                autoPolymorphic = true
                 xmlDeclMode = XmlDeclMode.Charset
-                indent = 2
                 xmlVersion = XmlVersion.XML10
+                setIndent(2)
             }
         }
         addSingletonFactory<ProtoBuf> {

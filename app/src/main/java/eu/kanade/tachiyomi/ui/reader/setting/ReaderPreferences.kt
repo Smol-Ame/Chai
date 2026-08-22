@@ -7,6 +7,7 @@ import eu.kanade.tachiyomi.ui.reader.viewer.pager.PagerConfig
 import tachiyomi.core.common.preference.Preference
 import tachiyomi.core.common.preference.PreferenceStore
 import tachiyomi.core.common.preference.getEnum
+import tachiyomi.core.common.preference.getEnumSet
 import tachiyomi.i18n.MR
 import tachiyomi.i18n.sy.SYMR
 
@@ -33,6 +34,21 @@ class ReaderPreferences(
     val doubleTapAnimSpeed: Preference<Int> = preferenceStore.getInt("pref_double_tap_anim_speed", 500)
 
     val showPageNumber: Preference<Boolean> = preferenceStore.getBoolean("pref_show_page_number_key", true)
+
+    val verticalNavigator: Preference<Set<ReadingMode>> = preferenceStore.getEnumSet(
+        "pref_vertical_navigator",
+        emptySet(),
+    )
+
+    val verticalNavigatorOnLeft: Preference<Boolean> = preferenceStore.getBoolean(
+        "pref_vertical_navigator_on_left",
+        false,
+    )
+
+    val verticalNavigatorHeight: Preference<Int> = preferenceStore.getInt(
+        "pref_vertical_navigator_height",
+        65,
+    )
 
     val showReadingMode: Preference<Boolean> = preferenceStore.getBoolean("pref_show_reading_mode", true)
 
@@ -202,12 +218,6 @@ class ReaderPreferences(
     val continuousVerticalTappingByPage: Preference<Boolean> = preferenceStore.getBoolean("continuous_vertical_tapping_by_page", false)
 
     val cropBordersContinuousVertical: Preference<Boolean> = preferenceStore.getBoolean("crop_borders_continues_vertical", false)
-
-    val forceHorizontalSeekbar: Preference<Boolean> = preferenceStore.getBoolean("pref_force_horz_seekbar", false)
-
-    val landscapeVerticalSeekbar: Preference<Boolean> = preferenceStore.getBoolean("pref_show_vert_seekbar_landscape", false)
-
-    val leftVerticalSeekbar: Preference<Boolean> = preferenceStore.getBoolean("pref_left_handed_vertical_seekbar", false)
 
     val readerBottomButtons: Preference<Set<String>> = preferenceStore.getStringSet("reader_bottom_buttons", ReaderBottomButton.BUTTONS_DEFAULTS)
 
